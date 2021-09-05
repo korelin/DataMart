@@ -10,7 +10,7 @@ object DataMart extends App {
 
   implicit val spark: SparkSession = Utils.getSession("Spark SQL basic data mart")
 
-  val entity = List("accounts", "cards", "savings_accounts")
+  val entity = Seq("accounts", "cards", "savings_accounts")
 
   entity.foreach{ e =>
     val df = spark.read

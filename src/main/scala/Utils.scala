@@ -12,25 +12,24 @@ object Utils {
 
   def makeCollapcedEntityView(dataFrame: DataFrame, name: String)
                             (implicit spark: SparkSession): DataFrame = {
-    val dataAndSet = (dataFrame.select("data.*").schema.fields
-      intersect dataFrame.select("set.*").schema.fields )
-      .map(x => s"nvl(set.${x.name},data.${x.name}) ${x.name}")
-    val onlyData = (dataFrame.select("data.*").schema.fields
-      diff dataFrame.select("set.*").schema.fields)
+    val dataFields = dataFrame.select("data.*").schema.fields
+    val setFields = dataFrame.select("set.*").schema.fields
+    val onlyData = (dataFields diff setFields)
       .map(x => s"data.${x.name} ${x.name}")
-    val onlySet = (dataFrame.select("set.*").schema.fields
-      diff dataFrame.select("data.*").schema.fields)
+    val onlySet = (setFields diff dataFields)
       .map(x => s"set.${x.name} ${x.name}")
-    val allList = ((dataFrame.select("data.*").schema.fields
-      union dataFrame.select("set.*").schema.fields) distinct)
-      .map(x => s"last_value(${x.name},true) over (partition by id order by ts) ${x.name}")
+    val dataAndSet = (dataFields intersect setFields)
+      .map(x => s"nvl(set.${x.name},data.${x.name}) ${x.name}")
+    val allList = ((dataFields union setFields) distinct)
+      .map(x => s"last_value(${x.name}, true) over (partition by id order by ts) ${x.name}").mkString(",\n")
     val cteList = (onlyData ++ dataAndSet ++ onlySet).mkString(",\n")
-    val ret = makeSqlView(s"""with cte as (select id, ts, $cteList
+    val ret = makeSqlView(s"""
+    with cte as (select id, ts, $cteList
     from $name)
     select id,
     ts tsb,
     nvl(lead(ts-1) over (partition by id order by ts),9999999999999999999999) tse,
-    ${allList.mkString(",\n")}
+    $allList
     from cte
     """, s"v_flat_$name")
     ret

@@ -38,7 +38,7 @@ object Scripts {
     """
       |select
       |ts,
-      |credit_used - lag(credit_used) over (partition by account_id order by ts) card,
+      |lag(credit_used) over (partition by account_id order by ts) - credit_used card,
       |balance - lag(balance) over (partition by account_id order by ts) save,
       |case when credit_used - lag(credit_used) over (partition by account_id order by ts) != 0 then 1 else 0 end c,
       |case when balance - lag(balance) over (partition by account_id order by ts) != 0 then 1 else 0 end b,

@@ -1,0 +1,11 @@
+{
+  "id": "sa1globalid",
+  "op": "c",
+  "ts": 1577890800000,
+  "data": {
+    "savings_account_id": "sa1",
+    "balance": 0,
+    "interest_rate_percent": 1.5,
+    "status": "ACTIVE"
+  }
+}

@@ -1,5 +1,5 @@
 FROM ubuntu:rolling
-
+# get apps
 RUN apt-get update -y && apt-get install -y \
 openjdk-8-jdk \
 curl \
@@ -11,29 +11,33 @@ RUN curl -sL "https://keyserver.ubuntu.com/pks/lookup?op=get&search=0x2EE0EA64E4
 RUN apt-get update -y && apt-get install -y sbt && \
 apt-get clean && \
 rm -rf /var/lib/apt/lists/*
-
+# set env
 ENV HOME /home/ubuntu
 ENV SPARK_VERSION 2.4.5
 ENV HADOOP_VERSION 2.7
 ENV SCALA_VERSION 2.11
+ENV SPARK_HOME ${HOME}/spark-${SPARK_VERSION}-bin-hadoop${HADOOP_VERSION}
+ENV PATH ${PATH}:${SPARK_HOME}/bin
 
 RUN useradd --create-home --shell /bin/bash ubuntu
 
 WORKDIR ${HOME}
 
-ENV SPARK_HOME ${HOME}/spark-${SPARK_VERSION}-bin-hadoop${HADOOP_VERSION}
-ENV PATH ${PATH}:${SPARK_HOME}/bin
-
 COPY . /home/ubuntu/
 RUN chown -R ubuntu:ubuntu /home/ubuntu/*
 USER ubuntu
-# build package
-#RUN sbt clean
-#RUN sbt package
 
-# get spark spark-2.4.5-bin-without-hadoop.tgz
+# build package
+RUN sbt clean
+RUN sbt test
+RUN sbt package
+
+# get spark
 RUN wget http://archive.apache.org/dist/spark/spark-${SPARK_VERSION}/spark-${SPARK_VERSION}-bin-hadoop${HADOOP_VERSION}.tgz && \
 tar xvf spark-${SPARK_VERSION}-bin-hadoop${HADOOP_VERSION}.tgz
 RUN rm -fv spark-${SPARK_VERSION}-bin-hadoop${HADOOP_VERSION}.tgz
 
-CMD $SPARK_HOME/bin/spark-submit --class ru.korelin.ivan.DataMart target/scala-2.11/solution_2.11-0.1.jar
+# set executable to spark_submit.sh
+RUN chmod +x /home/ubuntu/spark_submit.sh
+
+CMD /home/ubuntu/spark_submit.sh

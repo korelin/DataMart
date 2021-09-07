@@ -1,0 +1,8 @@
+{
+  "id": "a1globalid",
+  "op": "u",
+  "ts": 1577890800000,
+  "set": {
+    "savings_account_id": "sa1"
+  }
+}

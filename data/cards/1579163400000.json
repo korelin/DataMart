@@ -1,0 +1,12 @@
+{
+  "id": "c2globalid",
+  "op": "c",
+  "ts": 1579163400000,
+  "data": {
+    "card_id": "c2",
+    "card_number": "12123434",
+    "credit_used": 0,
+    "monthly_limit": 70000,
+    "status": "PENDING"
+  }
+}

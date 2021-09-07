@@ -1,0 +1,8 @@
+{
+  "id": "c1globalid",
+  "op": "u",
+  "ts": 1578654000000,
+  "set": {
+    "credit_used": 0
+  }
+}

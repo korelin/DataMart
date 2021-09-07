@@ -1,0 +1,8 @@
+{
+  "id": "c1globalid",
+  "op": "u",
+  "ts": 1578159000000,
+  "set": {
+    "status": "ACTIVE"
+  }
+}

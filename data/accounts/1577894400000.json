@@ -1,0 +1,9 @@
+{
+  "id": "a1globalid",
+  "op": "u",
+  "ts": 1577894400000,
+  "set": {
+    "address": "Jakarta",
+    "email": "anthony@anotherbank.com"
+  }
+}

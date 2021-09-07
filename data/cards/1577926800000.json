@@ -1,0 +1,12 @@
+{
+  "id": "c1globalid",
+  "op": "c",
+  "ts": 1577926800000,
+  "data": {
+    "card_id": "c1",
+    "card_number": "11112222",
+    "credit_used": 0,
+    "monthly_limit": 30000,
+    "status": "PENDING"
+  }
+}

@@ -4,8 +4,9 @@ import org.apache.spark.SparkConf
 import org.apache.spark.sql.functions.{col, expr, sum}
 import org.apache.spark.sql.types.StructField
 import org.apache.spark.sql.{DataFrame, SparkSession}
-
+import org.apache.spark.storage.StorageLevel
 import scala.language.postfixOps
+import scala.util.Try
 
 object Utils {
 
@@ -28,8 +29,8 @@ object Utils {
     (allList, cteList)
   }
 
-  def makeCollapcedEntityView(dataFrame: DataFrame, name: String, nameA: String = "data", nameB: String = "set")
-                             (implicit spark: SparkSession): DataFrame = {
+  def makeCollapsedEntityView(dataFrame: DataFrame, name: String, nameA: String = "data", nameB: String = "set")
+                             (implicit spark: SparkSession): Try[DataFrame] = Try {
     val (allList, cteList) = analyzeFields(dataFrame.select(s"$nameA.*").schema.fields, dataFrame.select(s"$nameB.*").schema.fields)
     val ret = makeSqlView(s"""
     with cte as (select id, ts, $cteList
@@ -47,6 +48,7 @@ object Utils {
                  (implicit spark: SparkSession): DataFrame = {
     val sqlView = spark.sql(script)
     sqlView.createOrReplaceTempView(name)
+    sqlView.persist(StorageLevel.MEMORY_AND_DISK)
     if (needToShow) sqlView.show()
     sqlView
   }

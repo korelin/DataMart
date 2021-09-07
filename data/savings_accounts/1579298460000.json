@@ -1,8 +1,0 @@
-{
-  "id": "sa1globalid",
-  "op": "u",
-  "ts": 1579298460000,
-  "set": {
-    "interest_rate_percent": 4.0
-  }
-}

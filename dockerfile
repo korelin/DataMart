@@ -24,8 +24,6 @@ RUN useradd --create-home --shell /bin/bash ubuntu
 WORKDIR ${HOME}
 
 COPY . /home/ubuntu/
-RUN mkdir /home/ubuntu/data
-ADD ../dwh-coding-challenge/data/* /home/ubuntu/data/
 RUN chown -R ubuntu:ubuntu /home/ubuntu/*
 USER ubuntu
 
